@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 public class DictionaryMain {
 
@@ -21,26 +20,14 @@ public class DictionaryMain {
 
 			//put the string of words into an array
 			String[] words = str.split(" ");
-			System.out.println(Arrays.toString(words));
 			
 			for(int i = 0; i < words.length; i++) {
 				dictionary.insertWordNode(words[i]);
 			}
 			
-			System.out.println("Spell check: " + dictionary.checkWord("Here"));
-			
-			/*
-			dictionary.insertWordNode("light");
-			dictionary.insertWordNode("window");
-			dictionary.insertWordNode("water bottle");
-			dictionary.insertWordNode("shoes");
-			dictionary.insertWordNode("chair");
-			dictionary.insertWordNode("desk");
-			
-			dictionary.deleteWordNode("chair");
-
-			
-			System.out.println("Spell Check: " + dictionary.checkWord("light"));*/
+			//displays if the word is spelled correctly or not
+			dictionary.checkWord("Here", dictionary.root);
+			dictionary.checkWord("ez", dictionary.root);
 			
 		}catch(FileNotFoundException e) {
 			System.out.println("File Not Found");

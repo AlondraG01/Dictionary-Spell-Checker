@@ -1,4 +1,3 @@
-
 public class Dictionary {
 	/**
 	 * Data members
@@ -18,41 +17,49 @@ public class Dictionary {
 	 * pointers should be assigned correctly.
 	 */
 	public void insertWordNode(String word) {
-		//assert that the word exists in the dictionary
-		assert !checkWord(word) : "The word " + word + " already exists in the dictionary";
-
-		Node temp = new Node();
-		temp.setNode(word);
-		temp.setParent(null);
-		temp.setleft(null);
-		temp.setright(null);
-
-		//BINARY SEARCH TREE
-		if (this.root == null) {
-			this.root = temp;
-		} else {
-			Node parentNode = null;
-			Node nodeTemp = this.root;
-
-			while (nodeTemp != null) {
-				parentNode = nodeTemp;
-				int compare = temp.getNode().compareTo(nodeTemp.getNode());
-
-				if (compare <= 0) {
-					nodeTemp = nodeTemp.getleft();
-				} else {
-					nodeTemp = nodeTemp.getright();
+		//CREATE TEMP WORD
+		Node temp = new Node(word);
+		
+		//assert if the tree is empty
+		assert(root == null): "Tree is empty";
+		//IF TREE IS EMPTY
+		if(root == null) {
+			root = temp;
+		}
+		//USE INSERT TO INSERT AT CORRECT LOCATION
+		else {
+			insertNode(root, temp);
+		}
+	}
+	
+	public void insertNode(Node myRoot, Node temp) {
+		//asserts that there is something to push
+		assert(true);
+		
+		while(true) {
+			//IGNORE DUPLICATE WORDS
+			if(temp.getWord().compareTo(myRoot.getWord()) == 0) {
+				return;
+			}
+			
+			//TRAVEL TO THE LEFT SIDE
+			if(temp.getWord().compareTo(myRoot.getWord()) <= 1) {
+				if(myRoot.left != null) {
+					myRoot = myRoot.left;
+				}else {
+					myRoot.left = temp;
+					break;
 				}
 			}
-
-			temp.setParent(parentNode);
-
-			if (temp.getNode().compareTo(parentNode.getNode()) <= 0) {
-				parentNode.setleft(temp);
-			} else {
-				parentNode.setright(temp);
+			//TRAVEL TO RIGHT SIDE
+			else {
+				if(myRoot.right != null) {
+					myRoot = myRoot.right;
+				}else {
+					myRoot.right = temp;
+					break;
+				}
 			}
-
 		}
 	}
 	
@@ -65,82 +72,20 @@ public class Dictionary {
 	 * (4)the node to be removed has two children 
 	 * Following a deleted node, respective node pointers must be correctly reassigned.
 	 */
-	public boolean checkWord(String search) {
-		Node temp = this.root;
-
-		while (temp != null && !temp.getNode().equals(search)) {
-			if (search.compareTo(temp.getNode()) <= 0) {
-				temp = temp.getleft();
-			} else {
-				temp = temp.getright();
+	public void checkWord(String str, Node root) {
+		if(root != null) {
+			if(str.compareTo(root.getWord()) == 0) {
+				System.out.println("True");
 			}
-		}
-		
-		if (temp == null) {
-			return false;
-		}else{
-			if (temp.getNode() == search) {
-				return true;
-			} else {
-				return false;
+			if(str.compareTo(root.getWord()) < 0) {
+				checkWord(str, root.left);
 			}
-		}
-	}
-	
-	public Node deleteWordNode(String key) {
-		//assert that the word exists -> if not then return
-		assert checkWord(key) && !isEmpty() : "the word " + key + " does not exist";
-		
-		Node parent = null;
-		Node current = this.root;
-
-		while (current != null && current.getNode() != key) {
-			parent = current;
-
-			if (current.getNode().compareTo(key) <= 0) {
-				current = current.right;
-			} else {
-				current = current.left;
+			if(str.compareTo(root.getWord()) > 0) {
+				checkWord(str, root.right);
 			}
-		}
-		
-		if (current == null) {
-			return this.root = null;
-		}
-		
-		if (current.left == null && current.right == null) {
-			if (current != root) {
-				if (parent.left == current) {
-					parent.left = null;
-				} else {
-					parent.right = null;
-				}
-			} else {
-				root = null;
-			}
-		}else if (current.left != null && current.right != null) {
-			Node heir = minWord(current.right);
-			String val = heir.getNode();
-
-			deleteWordNode(heir.getNode());
-			current.setNode(val);
-
 		}else {
-			Node child = (current.left != null) ? current.left : current.right;
-
-			if (current != root) {
-				if (current == parent.left) {
-					parent.left = child;
-				} else {
-					parent.right = child;
-				}
-			} else {
-				root = child;
-			}
+			System.out.println("False");
 		}
-		//assert that the word is deleted -> if not then return
-		assert checkWord(key) : "Error: The word you are trying to delete is still in the tree";
-		return root;
 	}
 
 	/**
@@ -149,20 +94,5 @@ public class Dictionary {
 	 */
 	public boolean isEmpty() {
 		return root == null;
-	}
-
-	public void setRoot(Node root) {
-		this.root = root;
-	}
-
-	public Node getRoot() {
-		return root;
-	}
-
-	public static Node minWord(Node curr) {
-		while (curr.left != null) {
-			curr = curr.left;
-		}
-		return curr;
 	}
 }
